@@ -70,53 +70,43 @@ const shoes = [
 
 app.get('/shoes', (req, res, next) => {
     
+    const min = req.query.minimum
+    const max = req.query.maximum
+    const type = req.query.type
+
     // create a const to be reset after each search
-    const tempShoes = shoes
-    
+    let tempShoes = [...shoes]
+    let results = []
+
     // create a filter for the minimum
-    if (req.query.minimum !== undefined) {
-        for (i in tempShoes) {
-            if (req.query.minimum > tempShoes[i].price) {
-                tempShoes.splice(i, 1)
-            }
-        }
+    if (min !== undefined) {
+        tempShoes = tempShoes.filter((shoe) => min < shoe.price)
     }
     
     // create a filter for the maximum
-    if (typeof req.query.maximum !== undefined) {
-        for (i in tempShoes) {
-            if (req.query.maximum < shoes[i].price) {
-                tempShoes.splice(i, 1)
-            }
-        }
+    if (req.query.maximum !== undefined) {
+        tempShoes = tempShoes.filter((shoe) => max > shoe.price)
     }
 
     // create a filter for the type
     if (req.query.type !== undefined) {
-        for (i in tempShoes) {
-            if (req.query.type !== shoes[i].type) {
-                tempShoes.splice(i, 1)
-            }
-        }
+        tempShoes = tempShoes.filter((shoe) => type == shoe.type)
+    }
+
+    // log the results
+    for (i in tempShoes) {
+        results.push(tempShoes[i].name)
     }
 
     // send the response
-    for (i in tempShoes) {
-        let results = []
-        for (i in tempShoes) {
-            results.push(tempShoes[i].name)
-        }
+    if (tempShoes.length) {
         res.send(`Here are the shoes that match your interests ${results}.`)
+    } else {
+        res.send(`Looks like we don't have what you are looking for.`)
     }
-
-    // reset the const
-    tempShoes = shoes
 });
-
 
 // launch the port
 app.listen(3000, () => {
     console.log(`Listening on port 3000`)
 })
-
-// reset the array
