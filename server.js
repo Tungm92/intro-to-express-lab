@@ -70,41 +70,47 @@ const shoes = [
 
 app.get('/shoes', (req, res, next) => {
     
+    // create a const to be reset after each search
+    const tempShoes = shoes
+    
     // create a filter for the minimum
     if (req.query.minimum !== undefined) {
-        for (i in shoes) {
-            if (req.query.minimum > shoes[i].price) {
-                shoes.splice(i, 1)
+        for (i in tempShoes) {
+            if (req.query.minimum > tempShoes[i].price) {
+                tempShoes.splice(i, 1)
             }
         }
     }
     
     // create a filter for the maximum
     if (typeof req.query.maximum !== undefined) {
-        for (i in shoes) {
+        for (i in tempShoes) {
             if (req.query.maximum < shoes[i].price) {
-                shoes.splice(i, 1)
+                tempShoes.splice(i, 1)
             }
         }
     }
 
     // create a filter for the type
     if (req.query.type !== undefined) {
-        for (i in shoes) {
+        for (i in tempShoes) {
             if (req.query.type !== shoes[i].type) {
-                shoes.splice(i, 1)
+                tempShoes.splice(i, 1)
             }
         }
     }
 
     // send the response
-    for (i in shoes) {
+    for (i in tempShoes) {
         let results = []
-        for (i in shoes) {
-            results.push(shoes[i].name)
+        for (i in tempShoes) {
+            results.push(tempShoes[i].name)
         }
         res.send(`Here are the shoes that match your interests ${results}.`)
     }
+
+    // reset the const
+    tempShoes = shoes
 });
 
 
@@ -112,3 +118,5 @@ app.get('/shoes', (req, res, next) => {
 app.listen(3000, () => {
     console.log(`Listening on port 3000`)
 })
+
+// reset the array
