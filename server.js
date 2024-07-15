@@ -12,11 +12,18 @@ app.get('/greetings/:username', (req, res, next) => {
 });
 
 // Exercise 2
+
+const getRandomNum = (input) => {
+    return Math.floor(Math.random()*input)
+};
+
 app.get('/roll/:number', (req, res, next) => {
+    
+    
     if (isNaN(req.params.number)) {
         res.send(`You must specify a number.`)
     } else {
-        res.send(`You rolled a ${req.params.number}`)
+        res.send(`You rolled a ${getRandomNum(req.params.number)}`)
     };    
 });
 
@@ -107,6 +114,6 @@ app.get('/shoes', (req, res, next) => {
 });
 
 // launch the port
-app.listen(3000, () => {
-    console.log(`Listening on port 3000`)
+app.listen(3001, () => {
+    console.log(`Listening on port 3001`)
 })
